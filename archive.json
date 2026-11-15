@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-11-12T05:49:36.473721+00:00",
+  "timestamp": "2026-11-15T04:53:38.102621+00:00",
   "repo": "SimonFrost-Arm/draft-ffm-rats-cca-token",
   "labels": [
     {
@@ -673,7 +673,7 @@
       "labels": [],
       "body": "Check the IANA section for inconsistencies, e.g.:\n\n* Claims\n  * Requests for claims that are already registered\n  * Missing requests\n* Media types\n  * CMW compliance",
       "createdAt": "2025-03-05T19:08:21Z",
-      "updatedAt": "2026-03-31T13:22:13Z",
+      "updatedAt": "2026-11-12T11:23:14Z",
       "closedAt": null,
       "comments": [
         {
@@ -682,6 +682,13 @@
           "body": "* CBOR tag 907 needs to be requested via the CBOR tag registration procedure, rather than the CWT registry - as [currently done](https://www.ietf.org/archive/id/draft-ffm-rats-cca-token-03.html#name-arm-cca-attestation-cmw)\n\n\n",
           "createdAt": "2026-03-31T13:22:13Z",
           "updatedAt": "2026-03-31T13:22:13Z"
+        },
+        {
+          "author": "thomas-fossati",
+          "authorAssociation": "COLLABORATOR",
+          "body": "This should be closed by #67, I think.\n\nSimon, could you please confirm that you are not planning any further change in this area?",
+          "createdAt": "2026-11-12T11:23:14Z",
+          "updatedAt": "2026-11-12T11:23:14Z"
         }
       ]
     },
@@ -979,6 +986,22 @@
           "updatedAt": "2026-10-29T12:57:58Z"
         }
       ]
+    },
+    {
+      "number": 70,
+      "id": "I_kwDOMRXjbM8AAAABemmvxg",
+      "title": "SemVer conventions in the profile identifiers",
+      "url": "https://github.com/SimonFrost-Arm/draft-ffm-rats-cca-token/issues/70",
+      "state": "OPEN",
+      "author": "thomas-fossati",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Ideally, the rules around versioning would be documented in the profile for a verifier developer.\n\nThis would include the following:\n\n1. How the evidence consumer can identify the version (Arm will not change the location of the version in the profile string).\n2. Minor and patch versions will be incremented to indicate that the old verifier and RP can continue to function with no loss of security.\n3. The major version will only be incremented when it is desired to intentionally force older verifiers and RPs to reject the evidence.",
+      "createdAt": "2026-11-12T11:25:13Z",
+      "updatedAt": "2026-11-12T11:25:13Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -5818,24 +5841,26 @@
       "id": "PR_kwDOMRXjbM8AAAABNYCSJQ",
       "title": "Minor clarification and consistency",
       "url": "https://github.com/SimonFrost-Arm/draft-ffm-rats-cca-token/pull/69",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "yogeshbdeshpande",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2026-11-06T18:20:14Z",
-      "updatedAt": "2026-11-09T18:22:18Z",
+      "updatedAt": "2026-11-12T09:17:58Z",
       "baseRepository": "SimonFrost-Arm/draft-ffm-rats-cca-token",
       "baseRefName": "main",
       "baseRefOid": "4832924a9c05fa8e0830c3963d57ea26aa456a13",
       "headRepository": "SimonFrost-Arm/draft-ffm-rats-cca-token",
       "headRefName": "more-clarifications",
       "headRefOid": "b000d73615e5d599edcf32ccbd98fc21a75a539b",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-11-12T09:17:54Z",
+      "mergedAt": "2026-11-12T09:17:54Z",
+      "mergedBy": "yogeshbdeshpande",
+      "mergeCommit": {
+        "oid": "32da52a07d1423594123d9c3f470a6616d20d956"
+      },
       "comments": [
         {
           "author": "yogeshbdeshpande",
@@ -5958,6 +5983,19 @@
               "updatedAt": "2026-11-09T18:13:33Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOMRXjbM8AAAABXf3k-g",
+          "commit": {
+            "abbreviatedOid": "b000d73"
+          },
+          "author": "SimonFrost-Arm",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "LGTM",
+          "createdAt": "2026-11-12T09:13:30Z",
+          "updatedAt": "2026-11-12T09:13:30Z",
+          "comments": []
         }
       ]
     }
