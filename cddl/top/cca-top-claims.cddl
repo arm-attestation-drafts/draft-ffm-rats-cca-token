@@ -21,7 +21,6 @@ cca-realm-direct-token-label = 44251
 cca-platform-selective-device-evidence-label = 44252
 cca-platform-comprehensive-device-evidence-label =  44253
 cca-platform-cpak-cert-chain-label = 44254
-cca-platform-cpak-cert-chain-with-evidence-label = 44255    ; placeholder: type selection within cert chain element may be sufficient
 cca-platform-firmware-activity-log-label = 44256
 cca-device-token-label = 44258      ; placeholder until DAT ECN resolved
 cca-platform-selective-device-log-label = 44260

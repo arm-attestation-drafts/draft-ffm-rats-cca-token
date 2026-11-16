@@ -29,15 +29,15 @@ author:
     organization: Arm Limited
     email: Simon.Frost@arm.com
  -  name: Thomas Fossati
-    organization: Linaro
-    email: thomas.fossati@linaro.org
+    organization: Nvidia
+    email: tfossati@nvidia.com
+ -  name: Yogesh Deshpande
+    organization: Arm Limited
+    email: Yogesh.Deshpande@arm.com
  -  name: Giri Mandyam
     organization: Advanced Micro Devices Inc
     email: gmandyam@amd.com
 contributor:
- -  name: Yogesh Deshpande
-    organization: Arm Limited
-    email: Yogesh.Deshpande@arm.com
  -  name: Sergei Trofimov
     organization: Arm Limited
     email: Sergei.Trofimov@arm.com
@@ -53,8 +53,8 @@ normative:
     author:
       org: Arm
     title: Realm Management Monitor specification 2.0
-    target: https://developer.arm.com/documentation/den0137/2-0bet3
-    date: 2026-08-03
+    target: https://support.arm.com/documentation/den0137/2-0bet4
+    date: 2026-11-02
   RME:
     author:
       org: Arm
@@ -211,7 +211,7 @@ unmodified.  An example of a RoT suitable
  for CCA would be an isolated
 Trusted subsystem responsible for initial measurements, lifecycle state
 management, identity and attestation services.  The services that the RoT
-provides for securitization of the CCA environment are described as
+provides to support the security guarantees of the CCA environment are described as
 Hardware-Enforced Security (HES) - see Section B4.1.5 of {{RME-SYSARCH}}.
 
 Realm-World:
@@ -256,8 +256,6 @@ The following architecture applies to both following attester models.
 
 ## Direct {#direct}
 
-The structure of the CCA direct Attester is illustrated in TODO-fig-cca-direct-attester.
-
 In the direct model, the RMM creates a set of claims that represent the state of a Realm.
 This set of claims is hashed and that hash is passed to the HES when requesting the CCA Platform evidence.
 This hash is included in a claim within the CCA Platform evidence.
@@ -265,8 +263,6 @@ The platform evidence is signed using the CCA Platform Attestation Key (CPAK).
 
 The CCA Evidence produced with the direct model comprises a signed EAT for the platform token and an unsigned EAT for the realm token, wrapped in a CMW {{CMW}} collection.
 The intra-collection binding is detailed in {{sec-token-binding}}.
-
-change addresses: [Issue #16](https://github.com/SimonFrost-Arm/draft-ffm-rats-cca-token/issues/16)
 
 ## Delegated {#delegated}
 
@@ -315,7 +311,7 @@ How the CPAK is derived is implementation-specific.
 {::include art/cca-runtime.ascii-art}
 ~~~
 {: #fig-cca-attester-runtime
-   title="CCA Attester Run-time Phase"
+   title="CCA Attester, Delegated Model Run-time Phase"
    align="center" }
 
 A reference implementation of the CCA Attester is provided by {{TF-RMM}}.
@@ -333,13 +329,13 @@ Target Environment elements:
 * The Realm state token
 
 The two sections use inter-related claims to bind together into a single logical unit.
-See {{sec-security-consideration}} for more details.
+See {{sec-token-binding}} for more details.
 
 The CCA attestation token may also contain further optional evidence sections depending upon the implementation and deployment choices.
 
 The above tokens are presented to the requester within a top level Conceptual Message Wrapper (CMW) collection {{CMW}}.
 
-This profile conforms to the claims in the Beta3 release of the 2.0 version of the
+This profile conforms to the claims in the Beta4 release of the 2.0 version of the
 Realm Management Monitor specification {{RMM}}.
 
 The CDDL within this draft conforms to the claim set at the latest profile version.
@@ -413,8 +409,8 @@ The following table captures the CMW cbor collection element labels and potentia
 | 44258 | CCA Realm Device Token | eat-uccs-coap-label | Placeholder until DAT ECN resolved |
 | 44252 | CCA Realm Selective Device Evidence | eat-uccs-coap-label | EAT-DA - Note 2 |
 | 44253 | CCA Realm Comprehensive Device Evidence | eat-uccs-coap-label | EAT-DA |
-| 44254 | CCA Platform CPAK Cert Chain | cert-chain-coap-label or cert-chain-with-evidence-coap-label | Note 3 |
-| 44255 | CCA Platform CPAK Cert Chain | | Placeholder: type selection within cert chain element may be sufficient |
+| 44254 | CCA Platform CPAK Cert Chain | cert-chain-coap-label or cert-chain-with-evidence-coap-label | |
+| 44255 | Deprecated
 | 44260 | CCA Realm Selective Device Log | coap-octet-stream-label | Note 2 |
 | 44261 | Confidential Compute Service Recipe File | coap-octet-stream-label | Note 4 |
 | 44262 | CCA Realm VMM Construction Log | coap-octet-stream-label | Note 4 |
@@ -428,8 +424,6 @@ Note 1: multiple FAL types are possible depending on implementation. As an examp
 
 Note 2: If the outstanding DAT Engineering Change Notice (ECN) determines that the DAT is to be removed, element 44252 (EAT-DA) will be deprecated and replaced by use of element 44260 (DA evidence log). The exact type of the latter is TBC.
 
-Note 3: it is TBC whether it is sufficient to have a common CMW element for certificate chains that distinguishes the actual format by type alone, rather than having distinct elements for the formats.
-
 Note 4: this is a placeholder for future work, actual type (or types) possible for this element are TBC.
 
 
@@ -439,6 +433,15 @@ Note 4: this is a placeholder for future work, actual type (or types) possible f
 
 
 ## CCA Platform token Claims
+
+## Platform Claims
+
+The set of claims for the CCA Platform token are as follows:
+
+~~~
+{::include cddl/platform/arm-platform-claims.cddl}
+~~~
+
 
 ## Caller Claims
 
@@ -1285,7 +1288,7 @@ Instead, the claim set is hashed and this value is used as a Challenge
 to obtain a CCA Platform token, signed by the CCA Platform RoT. The
 CCA Platform and Realm state claim set are presented within a CMW Collection
 as in the Delegated model. The two parts of the collection are bound
-together by the Nonce claim in the CCA Platform token having the same value
+together by the Workload Binding claim in the CCA Platform token having the same value
 as the hash of the Realm state claim set. If the Direct Model is used,
 the CCA Platform profile claim {{sec-plat-profile-definition-claim}} MUST
 have a different value from the reference profile. The map value within
@@ -1464,6 +1467,7 @@ of the CCA platform lifecycle in {{RMM}}.
 * Confirming that the implemented System Properties reported in the Platform Config claim
 {{sec-platform-config}} provide the required security features.
 * Ensuring that the Platform Attestation was produced by the Realm security domain by checking the Platform Client ID has the value arm-platform-client-id-rmsd {{sec-arm-platform-client-id}}.
+* Where an implementation of the CCA platform follows the Trusted Board Boot specification the RoTPKs from the arm-platform-tbb-rotpk should be validated.
 
 ### Live Firmware Activation (LFA)
 {: #sec-live-firmware-activation}
@@ -1527,13 +1531,12 @@ greatly simplifies the task of writing Relying Party policies in multi-attester
 environments.
 
 The contents of {{tab-ar4si-map}} are intended as guidance for implementing a
-PSA Verifier that computes its results using AR4SI.
-The table describes which PSA Evidence claims (if any) are related to which
+CCA Verifier that computes its results using AR4SI.
+The table describes which CCA Evidence claims (if any) are related to which
 AR4SI trustworthiness claim, and therefore what the Verifier must consider when
-deciding if and how to appraise a certain feature associated with the PSA
+deciding if and how to appraise a certain feature associated with the CCA
 Attester.
 
-TODO: Ar4SI
 
 
 Trustworthiness Vector claims | Related PSA claims
@@ -1855,8 +1858,7 @@ The Content-Formats should be allocated from the Expert review range (10000-1999
 
 # Examples
 
-The following examples show CCA attestation tokens for an hypothetical system
-comprising a single number of software component.
+The following examples show CCA attestation tokens for an hypothetical system.
 The attesting device is in a lifecycle state ({{sec-security-lifecycle}}) of
 SECURED.
 
@@ -1864,7 +1866,7 @@ SECURED.
 
 The following sample claim set and token are representative of a CCA Token using "delegated mode" described in {{delegated}}.
 
-In this model, the `eat_nonce` claim in the Platform token contains a hash of the RAK public key claim in the Realm token.
+In this model, the `arm-platform-workload-binding` claim in the Platform token contains a hash of the RAK public key claim in the Realm token.
 
 ### Platform Claims Set
 
@@ -1911,14 +1913,6 @@ which has the following base16 encoding:
 ~~~
 {::include-fold cddl/top/examples/1.hex}
 ~~~
-
-## Direct Mode
-
-The following sample claim sets and the resulting CCA Token are representative of a CCA Token using "direct mode" ({{direct}}).
-
-In "direct mode" the `eat_nonce` claim in the Platform token contains a hash of the Realm claims set, which includes verifier-provided challenge data.
-
-TODO
 
 # Acknowledgments
 {:numbered="false"}
