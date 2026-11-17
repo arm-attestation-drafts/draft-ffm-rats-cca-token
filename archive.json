@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-11-15T04:53:38.102621+00:00",
+  "timestamp": "2026-11-17T06:38:09.295737+00:00",
   "repo": "SimonFrost-Arm/draft-ffm-rats-cca-token",
   "labels": [
     {
@@ -1000,6 +1000,22 @@
       "body": "Ideally, the rules around versioning would be documented in the profile for a verifier developer.\n\nThis would include the following:\n\n1. How the evidence consumer can identify the version (Arm will not change the location of the version in the profile string).\n2. Minor and patch versions will be incremented to indicate that the old verifier and RP can continue to function with no loss of security.\n3. The major version will only be incremented when it is desired to intentionally force older verifiers and RPs to reject the evidence.",
       "createdAt": "2026-11-12T11:25:13Z",
       "updatedAt": "2026-11-12T11:25:13Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 72,
+      "id": "I_kwDOMRXjbM8AAAABf8lemA",
+      "title": "Section 5 CDDL omits the 2024 profile values that section 4.3.3 accepts, and section 4.3.3 repeats a profile heading",
+      "url": "https://github.com/SimonFrost-Arm/draft-ffm-rats-cca-token/issues/72",
+      "state": "OPEN",
+      "author": "sb-fuji",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "## Summary\n\nTwo editorial issues in `draft-ffm-rats-cca-token-04` (published 7 September 2026, still the latest revision on datatracker at the time of writing):\n\n1. Section 4.3.3 lists the 2024 profile values as valid, while the CDDL in sections 4.5.1, 4.8.2 and 5 accepts only the 2026 values.\n2. Sections 4.3.3.6 and 4.3.3.9 carry the same heading, and the profile value that section 4.3.3.9 appears to describe is accepted by the CDDL but defined by no section.\n\n## 1. CDDL and prose disagree on the accepted profile values\n\nSection 4.3.3 declares these values valid:\n\n```\n4.3.3.1  tag:arm.com,2024:cca_platform#1.1.0\n4.3.3.2  tag:arm.com,2024:cca_platform#2.0.0\n4.3.3.3  tag:arm.com,2024:cca_platform#2.0.0;direct\n```\n\nThe CDDL does not accept them. Section 4.5.1 defines:\n\n```\narm-platform-profile-type = \"tag:arm.com,2026:cca_platform#2.0.0\" /\n                            \"tag:arm.com,2026:cca_platform#2.0.0;delegated\" /\n                            \"tag:arm.com,2026:cca_platform#2.0.0;HESRAK\" /\n                            \"tag:arm.com,2026:cca_platform#2.0.0;direct\" /\n                            \"tag:arm.com,2026:cca_platform#2.1.0\" /\n                            \"tag:arm.com,2026:cca_platform#2.1.0;delegated\" /\n                            \"tag:arm.com,2026:cca_platform#2.1.0;HESRAK\" /\n                            \"tag:arm.com,2026:cca_platform#2.1.0;direct\"\n```\n\nand section 4.8.2 defines:\n\n```\ncca-realm-profile-type = \"tag:arm.com,2026:realm#2.0.0\"\n```\n\nSection 4.5.1 is inconsistent with itself as well: its prose states that the claim is \"a text string of value `tag:arm.com,2024:cca_platform#2.0.0`\", while the CDDL immediately below enumerates only 2026 values.\n\nSection 4.8.9 also reads as if the earlier profile values remain valid, because it defines `cca-realm-mec-policy` as an integer and states: \"Compatibility: this claim will be present for all values of CCA Realm Profile.\"\n\n**Impact.** A validator generated from section 5 rejects a token that section 4.3.3 declares valid. Two implementations that follow different sections of the same document do not interoperate, and the failure is silent until a token crosses between them.\n\n**Suggested fix.** Either the 2024 values are still valid, in which case they belong in `arm-platform-profile-type`, in `cca-realm-profile-type` (with the 2024 realm value named in 4.8.2) and in the 4.5.1 prose; or they are retired, in which case 4.3.3 should say so and remove them from the valid set. The compatibility statement in 4.8.9 points to the first option.\n\n## 2. Section 4.3.3 defines one profile heading twice\n\n```\n4.3.3.4  tag:arm.com,2026:cca_platform#2.0.0\n4.3.3.5  tag:arm.com,2026:cca_platform#2.0.0;direct\n4.3.3.6  tag:arm.com,2026:cca_platform#2.0.0;HESRAK\n4.3.3.7  tag:arm.com,2026:cca_platform#2.1.0\n4.3.3.8  tag:arm.com,2026:cca_platform#2.1.0;direct\n4.3.3.9  tag:arm.com,2026:cca_platform#2.0.0;HESRAK   <- repeat of 4.3.3.6\n```\n\nBy the order of the surrounding sections, 4.3.3.9 is presumably meant to define `tag:arm.com,2026:cca_platform#2.1.0;HESRAK`. That value is accepted by `arm-platform-profile-type` and by the collated CDDL in section 5, but no section of the document describes what it requires. An implementer must infer that the 2.1.0 variant behaves as the 2.0.0 variant, which is the kind of inference a profile value exists to remove.\n\n**Suggested fix.** Correct the heading of section 4.3.3.9 to `tag:arm.com,2026:cca_platform#2.1.0;HESRAK`, or state that the value is reserved and not defined.\n\n## Reproduce\n\nAgainst the published text version:\n\n```sh\ncurl -s https://www.ietf.org/archive/id/draft-ffm-rats-cca-token-04.txt | grep -n -A12 'arm-platform-profile-type ='\ncurl -s https://www.ietf.org/archive/id/draft-ffm-rats-cca-token-04.txt | grep -n 'cca-realm-profile-type'\ncurl -s https://www.ietf.org/archive/id/draft-ffm-rats-cca-token-04.txt | grep -n 'HESRAK'\n```\n\nThe first two show a 2026-only acceptance set against the 2024 values in 4.3.3. The third returns the duplicated heading twice, together with the two CDDL enumerations that accept the 2.1.0 HESRAK value.\n\nBoth items are editorial and can be fixed in one pass. They do not change the encoding of any claim.",
+      "createdAt": "2026-11-17T06:29:04Z",
+      "updatedAt": "2026-11-17T06:29:04Z",
       "closedAt": null,
       "comments": []
     }
@@ -5996,6 +6012,108 @@
           "createdAt": "2026-11-12T09:13:30Z",
           "updatedAt": "2026-11-12T09:13:30Z",
           "comments": []
+        }
+      ]
+    },
+    {
+      "number": 71,
+      "id": "PR_kwDOMRXjbM8AAAABPkG70A",
+      "title": "misc minor edits per YogeshD review",
+      "url": "https://github.com/SimonFrost-Arm/draft-ffm-rats-cca-token/pull/71",
+      "state": "MERGED",
+      "author": "SimonFrost-Arm",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Minor Editorial changes",
+      "createdAt": "2026-11-16T15:05:58Z",
+      "updatedAt": "2026-11-16T16:00:44Z",
+      "baseRepository": "SimonFrost-Arm/draft-ffm-rats-cca-token",
+      "baseRefName": "main",
+      "baseRefOid": "32da52a07d1423594123d9c3f470a6616d20d956",
+      "headRepository": "SimonFrost-Arm/draft-ffm-rats-cca-token",
+      "headRefName": "yd-review",
+      "headRefOid": "1435ef1ae2c1b805505fb88007f45aecb053b42f",
+      "closedAt": "2026-11-16T16:00:40Z",
+      "mergedAt": "2026-11-16T16:00:40Z",
+      "mergedBy": "yogeshbdeshpande",
+      "mergeCommit": {
+        "oid": "53f96068a0226ce75aefc88342787d762534c4d8"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOMRXjbM8AAAABYQLRgA",
+          "commit": {
+            "abbreviatedOid": "1435ef1"
+          },
+          "author": "yogeshbdeshpande",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-11-16T15:26:21Z",
+          "updatedAt": "2026-11-16T15:26:21Z",
+          "comments": [
+            {
+              "originalPosition": 133,
+              "body": "Do we need to mention about Optional Manufacturing Config?",
+              "createdAt": "2026-11-16T15:26:21Z",
+              "updatedAt": "2026-11-16T15:26:21Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOMRXjbM8AAAABYQL4xw",
+          "commit": {
+            "abbreviatedOid": "1435ef1"
+          },
+          "author": "yogeshbdeshpande",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "LGTM!. just left one minor comment!",
+          "createdAt": "2026-11-16T15:26:57Z",
+          "updatedAt": "2026-11-16T15:26:57Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOMRXjbM8AAAABYQf-1Q",
+          "commit": {
+            "abbreviatedOid": "1435ef1"
+          },
+          "author": "thomas-fossati",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "LGTM, thanks!",
+          "createdAt": "2026-11-16T15:47:40Z",
+          "updatedAt": "2026-11-16T15:47:51Z",
+          "comments": [
+            {
+              "originalPosition": 13,
+              "body": "Just a note, Giri has left AMD very recently.",
+              "createdAt": "2026-11-16T15:47:40Z",
+              "updatedAt": "2026-11-16T15:47:51Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOMRXjbM8AAAABYQq0yw",
+          "commit": {
+            "abbreviatedOid": "1435ef1"
+          },
+          "author": "yogeshbdeshpande",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "see some clarification",
+          "createdAt": "2026-11-16T15:58:50Z",
+          "updatedAt": "2026-11-16T15:59:09Z",
+          "comments": [
+            {
+              "originalPosition": 13,
+              "body": "Yes, we are waiting for his new affiliation and will consult him and change this.\n\n(nice to hear from you - between the IETF 127)",
+              "createdAt": "2026-11-16T15:58:50Z",
+              "updatedAt": "2026-11-16T15:59:09Z"
+            }
+          ]
         }
       ]
     }
