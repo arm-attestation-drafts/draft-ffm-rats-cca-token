@@ -5,12 +5,12 @@
 Network Working Group                                           S. Frost
 Internet-Draft                                               Arm Limited
 Intended status: Informational                                T. Fossati
-Expires: 20 May 2027                                              Nvidia
+Expires: 23 May 2027                                              Nvidia
                                                             Y. Deshpande
                                                              Arm Limited
                                                               G. Mandyam
                                               Advanced Micro Devices Inc
-                                                        16 November 2026
+                                                        19 November 2026
 
 
   Arm's Confidential Compute Architecture Reference Attestation Token
@@ -51,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 May 2027.
+   This Internet-Draft will expire on 23 May 2027.
 
 Copyright Notice
 
