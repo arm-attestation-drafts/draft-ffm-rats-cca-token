@@ -756,6 +756,90 @@ Compatibility: this claim can be present for all values of CCA Platform Profile.
 ~~~
 
 
+### CCA Platform Client ID
+{: #sec-arm-platform-client-id}
+
+The CCA platform client ID claim identifies the security domain from which the attestation token was requested.
+
+In this profile, the only valid value for the CCA platform client ID claim is the Realm Management Security Domain (RMSD).
+
+The CCA platform client ID claim MUST be present in a CCA platform token.
+
+Compatibility: this claim will be present where profile values are at or newer than "tag:arm.com,2024:cca_platform#2.0.0".
+
+~~~
+{::include cddl/platform/arm-platform-client-id.cddl}
+~~~
+
+### CCA Platform Extension
+{: #sec-arm-platform-extension}
+
+The CCA platform extension claim identifies components which have been added to the CCA platform at runtime
+and supplies verification hashes for evidence obtained from those components.
+
+An example of such a component is a coherent memory (CMEM) device
+
+The CCA platform extension claim is OPTIONAL in a CCA platform token
+
+Compatibility: this claim can be present where profile values are at or newer than "tag:arm.com,2026:cca_platform#2.1.0".
+
+~~~
+{::include cddl/platform/arm-platform-extension.cddl}
+~~~
+
+
+### CCA Platform Peer Signers
+{: #sec-arm-platform-peer-signers}
+
+In the event that the CCA platform consists of multiple peer RoTs which are unable to establish a
+single attestation signing entity at boot time, it is necessary for an attestation report produced by one of
+those RoTs to identify its peers where execution may be subsequently scheduled.
+The CCA platform peer signers claim is used to provide this information to a verifier.
+
+The CCA platform peer signers claim is OPTIONAL in a CCA platform token
+
+The data type for this claim is Implementation Defined as different underlying RoT technologies or provisioning schemes are likely.
+
+Note: this claim is not documented within the Realm Management Monitor specification {{RMM}} as it does not apply to the default implementation.
+
+~~~
+{::include cddl/platform/arm-platform-peer-signers.cddl}
+~~~
+
+### CCA Platform Discrete TPM Binding Data
+{: #sec-arm-platform-discrete-tpm-binding-data}
+
+The normal world of a device that supports CCA is outside the TCB of the confidential computing environment.
+In some deployments, it is seen to be desirable to be able to appraise measurements that indicate the untrusted hypervisor for the device.
+This is done by requesting a TPM quote in the normal world and providing it to the Relying Party together with the CCA Attestation token.
+The Discrete TPM Binding Data claim holds data that can be used to prove that the TPM and the CCA HES belong to the same system.
+
+The CCA platform Discrete TPM Binding Data claim is OPTIONAL in a CCA platform token
+
+Compatibility: this claim can be present where profile values are at or newer than "tag:arm.com,2024:cca_platform#2.0.0".
+
+The details of the binding data within this claim are Implementation Defined, as different underlying TPM binding schemes may be available.
+
+~~~
+{::include cddl/platform/arm-platform-discrete-tpm-binding-data.cddl}
+~~~
+
+
+### CCA Platform TBB ROTPK
+{: #sec-arm-platform-tbb-rotpk}
+
+Where an implementation of the CCA platform follows the Trusted Board Boot specification {{TBB}}, the platform
+will include several provisioned public key identifiers which are used to establish a chain of trust.
+The CCA platform TBB ROTPK claim is used to provide this information to a verifier.
+
+The CCA platform tbb rotpk claim is OPTIONAL in a CCA platform token
+
+Compatibility: this claim can be present where profile values are at or newer than "tag:arm.com,2024:cca_platform#2.0.0".
+
+~~~
+{::include cddl/platform/arm-platform-tbb-rotpk.cddl}
+~~~
+
 ## Software Inventory Claims
 
 ### Software Components
@@ -882,106 +966,6 @@ Compatibility: this claim will be present for all values of CCA Platform Profile
 
 ~~~
 {::include cddl/platform/arm-platform-hash-algm-id.cddl}
-~~~
-
-### CCA Platform Client ID
-{: #sec-arm-platform-client-id}
-
-The CCA platform client ID claim identifies the security domain from which the attestation token was requested.
-
-In this profile, the only valid value for the CCA platform client ID claim is the Realm Management Security Domain (RMSD).
-
-The CCA platform client ID claim MUST be present in a CCA platform token.
-
-Compatibility: this claim will be present where profile values are at or newer than "tag:arm.com,2024:cca_platform#2.0.0".
-
-~~~
-{::include cddl/platform/arm-platform-client-id.cddl}
-~~~
-
-### CCA Platform Manufacturing Config
-{: #sec-arm-platform-manufacturing-config}
-
-The CCA platform manufacturing config claim represents a record of production phases and testing conducted
-during the manufacturing process for this instance.
-
-The values encoding in this claim are implementation defined.
-
-The CCA platform manufacturing config claim is OPTIONAL in a CCA platform token
-
-Compatibility: this claim can be present for all values of CCA Platform Profile.
-
-~~~
-{::include cddl/platform/arm-platform-manufacturing-config.cddl}
-~~~
-
-### CCA Platform Extension
-{: #sec-arm-platform-extension}
-
-The CCA platform extension claim identifies components which have been added to the CCA platform at runtime
-and supplies verification hashes for evidence obtained from those components.
-
-An example of such a component is a coherent memory (CMEM) device
-
-The CCA platform extension claim is OPTIONAL in a CCA platform token
-
-Compatibility: this claim can be present where profile values are at or newer than "tag:arm.com,2026:cca_platform#2.1.0".
-
-~~~
-{::include cddl/platform/arm-platform-extension.cddl}
-~~~
-
-
-### CCA Platform Peer Signers
-{: #sec-arm-platform-peer-signers}
-
-In the event that the CCA platform consists of multiple peer RoTs which are unable to establish a
-single attestation signing entity at boot time, it is necessary for an attestation report produced by one of
-those RoTs to identify its peers where execution may be subsequently scheduled.
-The CCA platform peer signers claim is used to provide this information to a verifier.
-
-The CCA platform peer signers claim is OPTIONAL in a CCA platform token
-
-The data type for this claim is Implementation Defined as different underlying RoT technologies or provisioning schemes are likely.
-
-Note: this claim is not documented within the Realm Management Monitor specification {{RMM}} as it does not apply to the default implementation.
-
-~~~
-{::include cddl/platform/arm-platform-peer-signers.cddl}
-~~~
-
-### CCA Platform Discrete TPM Binding Data
-{: #sec-arm-platform-discrete-tpm-binding-data}
-
-The normal world of a device that supports CCA is outside the TCB of the confidential computing environment.
-In some deployments, it is seen to be desirable to be able to appraise measurements that indicate the untrusted hypervisor for the device.
-This is done by requesting a TPM quote in the normal world and providing it to the Relying Party together with the CCA Attestation token.
-The Discrete TPM Binding Data claim holds data that can be used to prove that the TPM and the CCA HES belong to the same system.
-
-The CCA platform Discrete TPM Binding Data claim is OPTIONAL in a CCA platform token
-
-Compatibility: this claim can be present where profile values are at or newer than "tag:arm.com,2024:cca_platform#2.0.0".
-
-The details of the binding data within this claim are Implementation Defined, as different underlying TPM binding schemes may be available.
-
-~~~
-{::include cddl/platform/arm-platform-discrete-tpm-binding-data.cddl}
-~~~
-
-
-### CCA Platform TBB ROTPK
-{: #sec-arm-platform-tbb-rotpk}
-
-Where an implementation of the CCA platform follows the Trusted Board Boot specification {{TBB}}, the platform
-will include several provisioned public key identifiers which are used to establish a chain of trust.
-The CCA platform TBB ROTPK claim is used to provide this information to a verifier.
-
-The CCA platform tbb rotpk claim is OPTIONAL in a CCA platform token
-
-Compatibility: this claim can be present where profile values are at or newer than "tag:arm.com,2024:cca_platform#2.0.0".
-
-~~~
-{::include cddl/platform/arm-platform-tbb-rotpk.cddl}
 ~~~
 
 #### Provisioning stage
@@ -1675,7 +1659,7 @@ Some of these claims have been already assigned via early allocation.
 * Claim Key: 2403
 * Claim Value Type(s): byte string
 * Change Controller: iana-request@arm.com
-* Specification Document(s): {{sec-arm-platform-manufacturing-config}} of {{&SELF}}
+* Specification Document(s): {{sec-platform-manufacturing-config}} of {{&SELF}}
 
 ### Platform Extension
 
