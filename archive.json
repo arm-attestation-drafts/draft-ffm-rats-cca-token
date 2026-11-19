@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-11-17T06:38:09.295737+00:00",
+  "timestamp": "2026-11-19T05:58:18.965518+00:00",
   "repo": "SimonFrost-Arm/draft-ffm-rats-cca-token",
   "labels": [
     {
@@ -1006,16 +1006,16 @@
     {
       "number": 72,
       "id": "I_kwDOMRXjbM8AAAABf8lemA",
-      "title": "Section 5 CDDL omits the 2024 profile values that section 4.3.3 accepts, and section 4.3.3 repeats a profile heading",
+      "title": "Two inconsistencies in draft-ffm-rats-cca-token: 2024 profile values listed but not accepted, and claim 2403 included twice",
       "url": "https://github.com/SimonFrost-Arm/draft-ffm-rats-cca-token/issues/72",
       "state": "OPEN",
       "author": "sb-fuji",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
-      "body": "## Summary\n\nTwo editorial issues in `draft-ffm-rats-cca-token-04` (published 7 September 2026, still the latest revision on datatracker at the time of writing):\n\n1. Section 4.3.3 lists the 2024 profile values as valid, while the CDDL in sections 4.5.1, 4.8.2 and 5 accepts only the 2026 values.\n2. Sections 4.3.3.6 and 4.3.3.9 carry the same heading, and the profile value that section 4.3.3.9 appears to describe is accepted by the CDDL but defined by no section.\n\n## 1. CDDL and prose disagree on the accepted profile values\n\nSection 4.3.3 declares these values valid:\n\n```\n4.3.3.1  tag:arm.com,2024:cca_platform#1.1.0\n4.3.3.2  tag:arm.com,2024:cca_platform#2.0.0\n4.3.3.3  tag:arm.com,2024:cca_platform#2.0.0;direct\n```\n\nThe CDDL does not accept them. Section 4.5.1 defines:\n\n```\narm-platform-profile-type = \"tag:arm.com,2026:cca_platform#2.0.0\" /\n                            \"tag:arm.com,2026:cca_platform#2.0.0;delegated\" /\n                            \"tag:arm.com,2026:cca_platform#2.0.0;HESRAK\" /\n                            \"tag:arm.com,2026:cca_platform#2.0.0;direct\" /\n                            \"tag:arm.com,2026:cca_platform#2.1.0\" /\n                            \"tag:arm.com,2026:cca_platform#2.1.0;delegated\" /\n                            \"tag:arm.com,2026:cca_platform#2.1.0;HESRAK\" /\n                            \"tag:arm.com,2026:cca_platform#2.1.0;direct\"\n```\n\nand section 4.8.2 defines:\n\n```\ncca-realm-profile-type = \"tag:arm.com,2026:realm#2.0.0\"\n```\n\nSection 4.5.1 is inconsistent with itself as well: its prose states that the claim is \"a text string of value `tag:arm.com,2024:cca_platform#2.0.0`\", while the CDDL immediately below enumerates only 2026 values.\n\nSection 4.8.9 also reads as if the earlier profile values remain valid, because it defines `cca-realm-mec-policy` as an integer and states: \"Compatibility: this claim will be present for all values of CCA Realm Profile.\"\n\n**Impact.** A validator generated from section 5 rejects a token that section 4.3.3 declares valid. Two implementations that follow different sections of the same document do not interoperate, and the failure is silent until a token crosses between them.\n\n**Suggested fix.** Either the 2024 values are still valid, in which case they belong in `arm-platform-profile-type`, in `cca-realm-profile-type` (with the 2024 realm value named in 4.8.2) and in the 4.5.1 prose; or they are retired, in which case 4.3.3 should say so and remove them from the valid set. The compatibility statement in 4.8.9 points to the first option.\n\n## 2. Section 4.3.3 defines one profile heading twice\n\n```\n4.3.3.4  tag:arm.com,2026:cca_platform#2.0.0\n4.3.3.5  tag:arm.com,2026:cca_platform#2.0.0;direct\n4.3.3.6  tag:arm.com,2026:cca_platform#2.0.0;HESRAK\n4.3.3.7  tag:arm.com,2026:cca_platform#2.1.0\n4.3.3.8  tag:arm.com,2026:cca_platform#2.1.0;direct\n4.3.3.9  tag:arm.com,2026:cca_platform#2.0.0;HESRAK   <- repeat of 4.3.3.6\n```\n\nBy the order of the surrounding sections, 4.3.3.9 is presumably meant to define `tag:arm.com,2026:cca_platform#2.1.0;HESRAK`. That value is accepted by `arm-platform-profile-type` and by the collated CDDL in section 5, but no section of the document describes what it requires. An implementer must infer that the 2.1.0 variant behaves as the 2.0.0 variant, which is the kind of inference a profile value exists to remove.\n\n**Suggested fix.** Correct the heading of section 4.3.3.9 to `tag:arm.com,2026:cca_platform#2.1.0;HESRAK`, or state that the value is reserved and not defined.\n\n## Reproduce\n\nAgainst the published text version:\n\n```sh\ncurl -s https://www.ietf.org/archive/id/draft-ffm-rats-cca-token-04.txt | grep -n -A12 'arm-platform-profile-type ='\ncurl -s https://www.ietf.org/archive/id/draft-ffm-rats-cca-token-04.txt | grep -n 'cca-realm-profile-type'\ncurl -s https://www.ietf.org/archive/id/draft-ffm-rats-cca-token-04.txt | grep -n 'HESRAK'\n```\n\nThe first two show a 2026-only acceptance set against the 2024 values in 4.3.3. The third returns the duplicated heading twice, together with the two CDDL enumerations that accept the 2.1.0 HESRAK value.\n\nBoth items are editorial and can be fixed in one pass. They do not change the encoding of any claim.",
+      "body": "## Summary\n\nTwo inconsistencies in `main`, checked on 2026-11-17.\n\n## 1. The 2024 profile values are listed but accepted by no CDDL\n\nSection 4.3.3, \"Platform to Realm Binding compatibility\", lists three 2024 values:\n\n```\ntag:arm.com,2024:cca_platform#1.1.0\ntag:arm.com,2024:cca_platform#2.0.0\ntag:arm.com,2024:cca_platform#2.0.0;direct\n```\n\nNeither CDDL accepts them: `cddl/platform/arm-platform-profile.cddl` enumerates eight values, all `tag:arm.com,2026:cca_platform...`, and `cddl/realm/cca-realm-profile.cddl` contains only `tag:arm.com,2026:realm#2.0.0`. The section does not say the 2024 values are historical.\n\n**Impact.** A 2024 profile identifier has undefined status. A validator generated from the CDDL rejects it, and a reader cannot tell whether the value is supported or superseded.\n\n**Fix.** State the status of the 2024 values in section 4.3.3, or add them to `arm-platform-profile-type` and `cca-realm-profile-type`.\n\n## 2. Claim 2403 is included by two sections\n\n`cddl/platform/arm-platform-manufacturing-config.cddl` is included twice, by \"Platform Manufacturing Config\" and by \"CCA Platform Manufacturing Config\". The claim registry entry for 2403 cites `sec-arm-platform-manufacturing-config`, the second of the two, so the first is the stray copy.\n\n**Fix.** Delete the \"Platform Manufacturing Config\" section.\n\n## Reproduce\n\n```sh\ngit clone --depth 1 https://github.com/SimonFrost-Arm/draft-ffm-rats-cca-token\ncd draft-ffm-rats-cca-token\n\ngrep -n '2024:cca_platform' draft-ffm-rats-cca-token.md\ncat cddl/platform/arm-platform-profile.cddl\ncat cddl/realm/cca-realm-profile.cddl\n\ngrep -n 'manufacturing-config' draft-ffm-rats-cca-token.md\ngrep -n -A4 'Claim Key: 2403' draft-ffm-rats-cca-token.md\n```\n\n**Related:** #70 (SemVer conventions in the profile identifiers). Whether the 2024 values stay valid or are retired is the same question as when a major version bump must force older verifiers to reject evidence.",
       "createdAt": "2026-11-17T06:29:04Z",
-      "updatedAt": "2026-11-17T06:29:04Z",
+      "updatedAt": "2026-11-17T08:13:08Z",
       "closedAt": null,
       "comments": []
     }
@@ -6027,7 +6027,7 @@
       "labels": [],
       "body": "Minor Editorial changes",
       "createdAt": "2026-11-16T15:05:58Z",
-      "updatedAt": "2026-11-16T16:00:44Z",
+      "updatedAt": "2026-11-17T09:48:03Z",
       "baseRepository": "SimonFrost-Arm/draft-ffm-rats-cca-token",
       "baseRefName": "main",
       "baseRefOid": "32da52a07d1423594123d9c3f470a6616d20d956",
@@ -6112,6 +6112,26 @@
               "body": "Yes, we are waiting for his new affiliation and will consult him and change this.\n\n(nice to hear from you - between the IETF 127)",
               "createdAt": "2026-11-16T15:58:50Z",
               "updatedAt": "2026-11-16T15:59:09Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOMRXjbM8AAAABYdMPLA",
+          "commit": {
+            "abbreviatedOid": "1435ef1"
+          },
+          "author": "SimonFrost-Arm",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-11-17T09:48:02Z",
+          "updatedAt": "2026-11-17T09:48:03Z",
+          "comments": [
+            {
+              "originalPosition": 133,
+              "body": "Given that is fully impdef then I don't think it needs a specific mention",
+              "createdAt": "2026-11-17T09:48:02Z",
+              "updatedAt": "2026-11-17T09:48:03Z"
             }
           ]
         }
