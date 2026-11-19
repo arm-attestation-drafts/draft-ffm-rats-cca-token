@@ -4,7 +4,7 @@
 
 This is the working area for the individual Internet-Draft, "Arm's Confidential Compute Architecture Reference Attestation Token".
 
-* [Editor's Copy](https://SimonFrost-Arm.github.io/draft-ffm-rats-cca-token/#go.draft-ffm-rats-cca-token.html)
+* [Editor's Copy](https://arm-attestation-drafts.github.io/draft-ffm-rats-cca-token/#go.draft-ffm-rats-cca-token.html)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-ffm-rats-cca-token)
 * [Individual Draft](https://datatracker.ietf.org/doc/html/draft-ffm-rats-cca-token)
 * [Compare Editor's Copy to Individual Draft](https://SimonFrost-Arm.github.io/draft-ffm-rats-cca-token/#go.draft-ffm-rats-cca-token.diff)
