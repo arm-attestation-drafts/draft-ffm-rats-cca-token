@@ -1659,7 +1659,7 @@ Some of these claims have been already assigned via early allocation.
 * Claim Key: 2403
 * Claim Value Type(s): byte string
 * Change Controller: iana-request@arm.com
-* Specification Document(s): {{sec-arm-platform-manufacturing-config}} of {{&SELF}}
+* Specification Document(s): {{sec-platform-manufacturing-config}} of {{&SELF}}
 
 ### Platform Extension
 
