@@ -641,7 +641,7 @@ found in the token.
 The EAT `eat_profile` (claim key 265) is used.
 
 The format of the CCA platform profile claim is defined as a text string of value
-"tag:arm.com,2024:cca_platform#2.0.0".
+"tag:arm.com,2026:cca_platform#2.0.0".
 
 This claim MUST be present in a CCA Platform attestation token.
 
