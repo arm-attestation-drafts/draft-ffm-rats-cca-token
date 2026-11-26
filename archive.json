@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-11-22T05:11:07.637327+00:00",
+  "timestamp": "2026-11-26T06:55:58.050738+00:00",
   "repo": "arm-attestation-drafts/draft-ffm-rats-cca-token",
   "labels": [
     {
@@ -1060,9 +1060,17 @@
       "labels": [],
       "body": "## Summary\n\nSection 4.5.1 defines the platform profile claim's format as the 2024 identifier in the present\ntense, and the CDDL immediately below it enumerates eight 2026 identifiers and no 2024 one. A\nreader who follows the prose emits a value that the CDDL rejects.\n\nChecked against the published `-04` plain text; line numbers refer to that file.\n\n## Evidence\n\nSection 4.5.1, lines 797-798:\n\n```\nThe format of the CCA platform profile claim is defined as a text\nstring of value \"tag:arm.com,2024:cca_platform#2.0.0\".\n```\n\nThe claim's own CDDL, lines 807-814:\n\n```\narm-platform-profile-type = \"tag:arm.com,2026:cca_platform#2.0.0\" /\n                            \"tag:arm.com,2026:cca_platform#2.0.0;delegated\" /\n                            \"tag:arm.com,2026:cca_platform#2.0.0;HESRAK\" /\n                            \"tag:arm.com,2026:cca_platform#2.0.0;direct\" /\n                            \"tag:arm.com,2026:cca_platform#2.1.0\" /\n                            \"tag:arm.com,2026:cca_platform#2.1.0;delegated\" /\n                            \"tag:arm.com,2026:cca_platform#2.1.0;HESRAK\" /\n                            \"tag:arm.com,2026:cca_platform#2.1.0;direct\"\n```\n\nThe paragraph's compatibility statement, lines 802-803, is \"this claim will be present for all\nvalues of CCA Platform Profile\", so the prose does not place the 2024 value in an earlier-profile\nrole either.\n\n## The twin claim was updated in the same revision\n\nIn `-03`, both profile claims carried the same sentence with their own 2024 values (lines 743 and\n1420 of the `-03` plain text). The realm sentence even carried the platform claim's name \u2014 \"CCA\nplatform profile claim\" with a realm value \u2014 and `-04` corrected both the wording and the value\ntogether at line 1449, updating its CDDL at line 1459. So that sentence was demonstrably in scope\nof the `-04` edit.\n\nThe platform sentence was carried over unchanged at line 797 while its CDDL moved to 2026, which\nreads as a missed edit rather than a deliberate choice. It is still present on `main` as of\n2026-11-21.\n\n## Why this is not the section 4.3.3 case\n\nSection 4.3.3 is titled \"Platform to Realm Binding compatibility\" and opens by describing all\nversions of the profile, so its 2024 values are compatibility notes, consistent with the CDDL\nlisting only the current profile values (as answered in #72). Section 4.5.1 is a definition of the\nclaim's format, and the draft's other claims use the compatibility form it prescribes, for example\nat lines 1179-1180:\n\n```\nCompatibility: this claim will be present where profile values are at\nor newer than \"tag:arm.com,2024:cca_platform#2.0.0\".\n```\n\nSection 4.5.1 does not use that form, so the 2024 string reads as the current value.\n\n## Suggested change\n\nOne line: define the value as the 2026 identifier, or as one of the values listed in the CDDL below.",
       "createdAt": "2026-11-20T20:35:56Z",
-      "updatedAt": "2026-11-20T20:46:54Z",
+      "updatedAt": "2026-11-25T11:20:06Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "SimonFrost-Arm",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Good catch. Addressed by https://github.com/arm-attestation-drafts/draft-ffm-rats-cca-token/pull/75",
+          "createdAt": "2026-11-25T11:20:06Z",
+          "updatedAt": "2026-11-25T11:20:06Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -6235,6 +6243,48 @@
           "body": "LGTM!",
           "createdAt": "2026-11-19T13:46:21Z",
           "updatedAt": "2026-11-19T13:46:21Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 75,
+      "id": "PR_kwDOMRXjbM8AAAABRz_GvA",
+      "title": "Issue 74: fix current value for platform profile string",
+      "url": "https://github.com/arm-attestation-drafts/draft-ffm-rats-cca-token/pull/75",
+      "state": "MERGED",
+      "author": "SimonFrost-Arm",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Fix for https://github.com/arm-attestation-drafts/draft-ffm-rats-cca-token/issues/74: update latest platform profile string value to ...2026...",
+      "createdAt": "2026-11-25T11:19:24Z",
+      "updatedAt": "2026-11-25T11:23:49Z",
+      "baseRepository": "arm-attestation-drafts/draft-ffm-rats-cca-token",
+      "baseRefName": "main",
+      "baseRefOid": "bb96add5f6a8e7402f747e4ee99a8f79d3a9546d",
+      "headRepository": "arm-attestation-drafts/draft-ffm-rats-cca-token",
+      "headRefName": "iss74",
+      "headRefOid": "9c0cb419bbc92bb99cb3fca9d7a570d50e5f9e37",
+      "closedAt": "2026-11-25T11:23:46Z",
+      "mergedAt": "2026-11-25T11:23:46Z",
+      "mergedBy": "yogeshbdeshpande",
+      "mergeCommit": {
+        "oid": "fb7a0cff2b7c1d9de898f3db931fafc94dc67f21"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOMRXjbM8AAAABaQI6Kw",
+          "commit": {
+            "abbreviatedOid": "9c0cb41"
+          },
+          "author": "yogeshbdeshpande",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-11-25T11:23:29Z",
+          "updatedAt": "2026-11-25T11:23:29Z",
           "comments": []
         }
       ]
